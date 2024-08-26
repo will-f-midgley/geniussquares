@@ -1,10 +1,3 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-completed = 0
-
-
 def create_grid(o):
     g = []
     for i in range(0, 6):
@@ -18,21 +11,45 @@ def create_grid(o):
 
 
 def get_blocks():
-    blue = [[[0, 0]]]
-    green = [[[0, 0], [0, 1], [1, 1], [1, 0]]]
-    brown = [[[0, 0], [0, 1]], [[0, 0], [1, 0]]]
-    orange = [[[0, 0], [0, 1], [0, 2]], [[0, 0], [1, 0], [2, 0]]]
-    cyan = [[[0, 0], [0, 1], [0, 2], [1, 0]], [[0, 0], [0, 1], [1, 1], [1, 2]], [[1, 0], [1, 1], [1, 2], [0, 2]],
-            [[0, 0], [1, 0], [2, 0], [2, 1]], [[0, 0], [1, 0], [1, 1], [1, 2]], [[0, 0], [1, 0], [2, 0], [0, 1]],
-            [[0, 0], [0, 1], [0, 2], [1, 2]], [[0, 1], [1, 1], [1, 2], [0, 2]]]
-    grey = [[[0, 0], [0, 1], [0, 2], [0, 3]], [[0, 0], [1, 0], [2, 0], [3, 0]]]
-    yellow = [[[0, 0], [0, 1], [1, 1], [0, 2]], [[1, 0], [1, 1], [0, 1], [1, 2]], [[0, 0], [1, 0], [1, 1], [2, 0]],
-              [[0, 1], [1, 1], [1, 0], [1, 2]]]
-    purple = [[[0, 0], [0, 1], [1, 1]], [[0, 0], [0, 1], [1, 0]], [[1, 0], [1, 1], [0, 1]], [[0, 0], [1, 0], [1, 1]]]
-    red = [[[0, 0], [0, 1], [1, 1], [1, 2]], [[1, 0], [1, 1], [0, 1], [0, 2]], [[0, 0], [1, 0], [1, 1], [2, 1]],
-           [[0, 1], [1, 0], [1, 1], [2, 0]]]
+    blue = [[0, 0]]
+    green = [[0, 0], [0, 1], [1, 1], [1, 0]]
+    brown = [[0, 0], [1, 0]]
+    orange = [[0, 0], [1, 0], [2, 0]]
+    cyan = [[0, 0], [0, 1], [0, 2], [1, 0]]
+    grey = [[0, 0], [0, 1], [0, 2], [0, 3]]
+    yellow = [[0, 0], [0, 1], [1, 1], [0, 2]]
+    purple = [[0, 0], [0, 1], [1, 1]]
+    red = [[0, 0], [0, 1], [1, 1], [1, 2]]
 
-    return [red, green, brown, orange, cyan, grey, yellow, purple, blue]
+    all_blocks = [red, green, brown, orange, cyan, grey, yellow, purple, blue]
+    for i in range(0, len(all_blocks)):
+        all_blocks[i] = transform_block(all_blocks[i])
+    return all_blocks
+
+
+def transform_block(block):
+    matrices = [[0, -1, 1, 0], [-1, 0, 0, -1], [0, 1, -1, 0], [0, 1, 1, 0], [-1, 0, 0, 1], [0, -1, -1, 0],
+                [1, 0, 0, -1]]
+    transformations = [block]
+    for i in matrices:
+        temp = apply_transformation(block, i)
+        if temp not in transformations:
+            transformations.append(temp)
+    print(transformations)
+    return transformations
+
+
+def apply_transformation(b, m):
+    new_b = []
+    x_low = 0
+    y_low = 0
+    for i in range(0, len(b)):
+        new_b.append([b[i][0] * m[0] + b[i][1] * m[1], b[i][0] * m[2] + b[i][1] * m[3]])
+        x_low = min(new_b[i][0], x_low)
+        y_low = min(new_b[i][1], y_low)
+    for i in range(0, len(b)):
+        new_b[i] = [new_b[i][0] - x_low, new_b[i][1] - y_low]
+    return sorted(new_b)
 
 
 def print_grid(g):
