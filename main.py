@@ -1,3 +1,4 @@
+# Function to create initial grid and place appropriate obstacles
 def create_grid(o):
     g = []
     for i in range(0, 6):
@@ -27,7 +28,10 @@ def get_blocks():
     return all_blocks
 
 
+# Helper function for individual blocks
 def transform_block(block):
+    # List of all possible transformations in matrix form: Rotations through 90, 180 and 270 degrees as well as
+    # reflections in the line y = 0 on top of these.
     matrices = [[0, -1, 1, 0], [-1, 0, 0, -1], [0, 1, -1, 0], [0, 1, 1, 0], [-1, 0, 0, 1], [0, -1, -1, 0],
                 [1, 0, 0, -1]]
     transformations = [block]
@@ -39,6 +43,7 @@ def transform_block(block):
     return transformations
 
 
+# Applies matrix onto block and transitions onto positive axis
 def apply_transformation(b, m):
     new_b = []
     x_low = 0
@@ -67,19 +72,19 @@ def place_blocks(bs, g, n, g3, c):
         for i in range(0, 6):
             for j in range(0, 6):
                 failed = False
-                g2 = [row[:] for row in g]
-                g4 = [row[:] for row in g3]
+                new_grid = [row[:] for row in g]
+                new_temp_grid = [row[:] for row in g3]
 
                 for x in range(0, len(b)):
                     if i + int(b[x][0]) > 5 or j + int(b[x][1]) > 5:
                         failed = True
                     if not failed:
-                        if g2[i + b[x][0]][j + b[x][1]] == 1:
+                        if new_grid[i + b[x][0]][j + b[x][1]] == 1:
                             failed = True
-                        g2[i + b[x][0]][j + b[x][1]] = 1
-                        g4[i + b[x][0]][j + b[x][1]] = n + 2
+                        new_grid[i + b[x][0]][j + b[x][1]] = 1
+                        new_temp_grid[i + b[x][0]][j + b[x][1]] = n + 2
                 if not failed:
-                    c = place_blocks(bs, g2, n + 1, g4, c)
+                    c = place_blocks(bs, new_grid, n + 1, new_temp_grid, c)
 
     return c
 
@@ -89,7 +94,6 @@ if __name__ == '__main__':
     grid = create_grid(obstacles)
     blocks = get_blocks()
     print_grid(grid)
-    g6 = [row[:] for row in grid]
-    total = 0
-    total = place_blocks(blocks, grid, 0, g6, total)
+    temp_grid = [row[:] for row in grid]
+    total = place_blocks(blocks, grid, 0, temp_grid, 0)
     print(total)
