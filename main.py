@@ -63,7 +63,7 @@ def print_grid(g):
 
 def place_blocks(bs, g, n, g3, c):
     if n == 9:
-        # printGrid(g3)
+        print_grid(g3)
         c = c + 1
         return c
     r = bs[n]
