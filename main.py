@@ -1,3 +1,6 @@
+from modules.imagefeature import display_image
+
+
 # Function to create initial grid and place appropriate obstacles
 def create_grid(o):
     g = []
@@ -39,7 +42,6 @@ def transform_block(block):
         temp = apply_transformation(block, i)
         if temp not in transformations:
             transformations.append(temp)
-    print(transformations)
     return transformations
 
 
@@ -57,13 +59,11 @@ def apply_transformation(b, m):
     return sorted(new_b)
 
 
-def print_grid(g):
-    print('\n', g[0], '\n', g[1], '\n', g[2], '\n', g[3], '\n', g[4], '\n', g[5])
-
-
 def place_blocks(bs, g, n, g3, c):
     if n == 9:
-        # printGrid(g3)
+        # Displays first found solution
+        if c == 0:
+            display_image(g3)
         c = c + 1
         return c
     r = bs[n]
@@ -93,7 +93,6 @@ if __name__ == '__main__':
     obstacles = [[0, 0], [1, 2], [3, 1], [5, 3], [3, 4], [4, 5], [1, 4]]
     grid = create_grid(obstacles)
     blocks = get_blocks()
-    print_grid(grid)
     temp_grid = [row[:] for row in grid]
     total = place_blocks(blocks, grid, 0, temp_grid, 0)
-    print(total)
+    print("Possible solutions:", total)
